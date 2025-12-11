@@ -158,9 +158,9 @@ app.post('/api/monitor-group', async (req, res) => {
             console.log('✅ Group added to monitoring:', groupName);
             io.emit('group-added', groupConfig);
             
-            res.json({ 
-                success: true, 
-                message: 'Grupo agregado correctamente',
+            res.json({
+                success: true,
+                message: 'Group added successfully',
                 group: groupConfig
             });
         } else {
@@ -168,8 +168,8 @@ app.post('/api/monitor-group', async (req, res) => {
             res.json({ success: false, message: 'El grupo ya está siendo monitoreado' });
         }
     } catch (error) {
-        console.error('❌ Error al agregar grupo:', error);
-        res.status(500).json({ success: false, error: error.message });
+        console.error('❌ Error adding group:', error);
+        res.status(500).json({ success: false, message: error.message });
     }
 });
 
@@ -305,7 +305,7 @@ app.get('/api/export-group/:groupId', (req, res) => {
     }
 });
 
-// Obtener TODOS los mensajes de un grupo (no solo filtrados)
+// Get ALL messages from a group (not just filtered)
 app.get('/api/group-all-messages/:groupId', async (req, res) => {
     try {
         const groupId = req.params.groupId;
@@ -323,7 +323,7 @@ app.get('/api/group-all-messages/:groupId', async (req, res) => {
             return res.json({ success: false, message: 'Group not found' });
         }
         
-        // Obtener los últimos mensajes del grupo
+        // Get the last messages from the group
         const messages = await chat.fetchMessages({ limit: limit });
         
         const formattedMessages = messages.map((msg) => {
@@ -403,10 +403,10 @@ app.post('/api/reconnect-whatsapp', async (req, res) => {
             io.emit('wa-connecting', { message: 'Reconectando...' });
             res.json({ success: true, message: 'Intentando reconectar' });
         } else {
-            res.json({ success: false, message: 'Cliente no disponible' });
+            res.json({ success: false, message: 'Client not available' });
         }
     } catch (error) {
-        console.error('Error al reconectar:', error);
+        console.error('Error reconnecting:', error);
         res.status(500).json({ success: false, error: error.message });
     }
 });
@@ -516,7 +516,7 @@ const client = new Client({
 });
 console.log('✅ WhatsApp client created');
 
-// Deshabilitar envío de mensajes
+// Disable message sending
 client.sendMessage = function() {
     console.log('⚠️  Read-only mode - Cannot send messages');
     return Promise.reject('Modo solo lectura activado');
@@ -612,10 +612,10 @@ client.on('disconnected', (reason) => {
         console.log('🔄 Reconectando en 10 segundos...');
         setTimeout(async () => {
             try {
-                console.log('🔄 Intentando reinicializar...');
+                console.log('🔄 Attempting to reinitialize...');
                 await client.initialize();
             } catch (err) {
-                console.error('❌ Error al reconectar:', err.message);
+                console.error('❌ Error reconnecting:', err.message);
             }
         }, 10000);
     }
@@ -633,7 +633,7 @@ client.on('change_state', state => {
     }
 });
 
-// Manejador principal de mensajes
+// Main message handler
 client.on('message', async message => {
     if (!config.botActive || !config.readOnly) return;
     
@@ -657,20 +657,20 @@ client.on('message', async message => {
             const groupKeywords = groupConfig.customKeywords || [];
             const groupMinFare = groupConfig.minFare || config.minFare;
             
-            // Procesar mensaje (incluyendo caption de mensajes multimedia)
+            // Process message (including multimedia captions)
             let text = message.body || '';
             
             // Si es mensaje multimedia, intentar obtener el caption
             if (message.hasMedia && message.type !== 'chat') {
                 try {
-                    // En mensajes multimedia, el caption está en _data.caption
+                    // In multimedia messages, the caption is in _data.caption
                     const caption = message._data?.caption || '';
                     if (caption.trim()) {
                         text = caption;
                         console.log('📷 Multimedia message with caption detected:', caption.substring(0, 50) + '...');
                     } else {
                         console.log('📷 Multimedia message without caption (image/video only)');
-                        return; // No hay texto para analizar
+                        return; // No text to analyze
                     }
                 } catch (e) {
                     console.log('⚠️ Error getting multimedia caption:', e.message);
@@ -737,7 +737,7 @@ client.on('message', async message => {
                 // Enviar notificación
                 const alertText = `\n═══════════════════════════════\n` +
                                  `📅 ${new Date().toLocaleString()}\n` +
-                                 `👥 Grupo: ${chat.name}\n` +
+                                 `👥 Group: ${chat.name}\n` +
                                  `👤 De: ${contact.pushname || contact.number || 'Desconocido'}\n` +
                                  `💰 Tarifa: ${fare ? '£' + fare : 'No especificada'}\n` +
                                  `💬 Mensaje:\n${text}\n` +

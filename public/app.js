@@ -182,7 +182,7 @@ $(document).ready(function() {
 
     socket.on('chats-loaded', (groups) => {
         updateAvailableGroups(groups);
-        toastr.info(groups.length + ' grupos cargados', 'Grupos Disponibles');
+        toastr.info(groups.length + ' groups loaded', 'Available Groups');
     });
 
     socket.on('available-groups', (groups) => {
@@ -1083,7 +1083,7 @@ $(document).ready(function() {
                 
                 html += '</div>';
                 $('#logsContainer').html(html);
-                toastr.success(response.logs.length + ' mensajes cargados', 'Logs');
+                toastr.success(response.logs.length + ' messages loaded', 'Logs');
             } else {
                 $('#logsContainer').html('\
                     <div class="log-placeholder">\
@@ -1130,7 +1130,7 @@ $(document).ready(function() {
                 let html = '<div class="logs-list">';
                 html += '<div class="log-header-title"><h3><i class="fas fa-comments"></i> Last ' + response.total + ' messages from "' + groupName + '"</h3></div>';
                 
-                // Los mensajes más recientes primero
+                // Most recent messages first
                 const sortedMessages = response.messages.reverse();
                 sortedMessages.forEach(function(msg) {
                     const date = new Date(msg.timestamp);
@@ -1162,7 +1162,7 @@ $(document).ready(function() {
                 
                 html += '</div>';
                 $('#logsContainer').html(html);
-                toastr.success(response.total + ' mensajes cargados', 'Mensajes');
+                toastr.success(response.total + ' messages loaded', 'Messages');
             } else if (response.success && response.messages.length === 0) {
                 $('#logsContainer').html('\
                     <div class="log-placeholder">\
@@ -1170,7 +1170,7 @@ $(document).ready(function() {
                         <p>No messages in this group</p>\
                     </div>\
                 ');
-                toastr.info('No hay mensajes', 'Mensajes');
+                toastr.info('No messages', 'Messages');
             } else {
                 $('#logsContainer').html('\
                     <div class="log-placeholder">\
@@ -1178,7 +1178,7 @@ $(document).ready(function() {
                         <p>' + (response.message || 'Error loading messages') + '</p>\
                     </div>\
                 ');
-                toastr.warning(response.message || 'No se pudo cargar los mensajes', 'Mensajes');
+                toastr.warning(response.message || 'Could not load messages', 'Messages');
             }
         }).fail(function(err) {
             button.prop('disabled', false).html('<i class="fas fa-comments"></i> Ver Todos los Mensajes');
