@@ -1,0 +1,86 @@
+{
+  "monitoredGroups": [
+    {
+      "id": "120363367816691228@g.us",
+      "name": "Taxi Exchange",
+      "added": "2025-12-11T07:52:46.518Z",
+      "customKeywords": [],
+      "minFare": "100",
+      "enabled": "true",
+      "stats": {
+        "totalMessages": 0,
+        "filteredMessages": 0,
+        "lastActivity": null
+      }
+    },
+    {
+      "id": "120363251574282800@g.us",
+      "name": "🚖 ✈️ Bookings Pool 3 ✈️ 🚖",
+      "added": "2025-12-11T07:52:48.357Z",
+      "customKeywords": [],
+      "minFare": "100",
+      "enabled": true,
+      "stats": {
+        "totalMessages": 0,
+        "filteredMessages": 0,
+        "lastActivity": null
+      }
+    },
+    {
+      "id": "120363400766216799@g.us",
+      "name": "Airport Runs X & XL",
+      "added": "2025-12-11T07:52:59.160Z",
+      "customKeywords": [],
+      "minFare": "100",
+      "enabled": true,
+      "stats": {
+        "totalMessages": 0,
+        "filteredMessages": 0,
+        "lastActivity": null
+      }
+    }
+  ],
+  "ignoredGroups": [],
+  "groupSettings": {
+    "120363367816691228@g.us": {
+      "id": "120363367816691228@g.us",
+      "name": "Taxi Exchange",
+      "added": "2025-12-11T07:52:46.518Z",
+      "customKeywords": [],
+      "minFare": "100",
+      "enabled": "true",
+      "stats": {
+        "totalMessages": 0,
+        "filteredMessages": 0,
+        "lastActivity": null
+      }
+    },
+    "120363251574282800@g.us": {
+      "id": "120363251574282800@g.us",
+      "name": "🚖 ✈️ Bookings Pool 3 ✈️ 🚖",
+      "added": "2025-12-11T07:52:48.357Z",
+      "customKeywords": [],
+      "minFare": "100",
+      "enabled": true,
+      "stats": {
+        "totalMessages": 0,
+        "filteredMessages": 0,
+        "lastActivity": null
+      }
+    },
+    "120363400766216799@g.us": {
+      "id": "120363400766216799@g.us",
+      "name": "Airport Runs X & XL",
+      "added": "2025-12-11T07:52:59.160Z",
+      "customKeywords": [],
+      "minFare": "100",
+      "enabled": true,
+      "stats": {
+        "totalMessages": 0,
+        "filteredMessages": 0,
+        "lastActivity": null
+      }
+    }
+  },
+  "lastScan": null
+}

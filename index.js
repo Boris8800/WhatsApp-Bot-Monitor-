@@ -667,13 +667,13 @@ client.on('message', async message => {
                     const caption = message._data?.caption || '';
                     if (caption.trim()) {
                         text = caption;
-                        console.log('📷 Multimedia message with caption detected:', caption.substring(0, 50) + '...');
+                        console.log('📷 Mensaje multimedia con caption detectado:', caption.substring(0, 50) + '...');
                     } else {
-                        console.log('📷 Multimedia message without caption (image/video only)');
+                        console.log('📷 Mensaje multimedia sin caption (solo imagen/video)');
                         return; // No hay texto para analizar
                     }
                 } catch (e) {
-                    console.log('⚠️ Error getting multimedia caption:', e.message);
+                    console.log('⚠️ Error al obtener caption de multimedia:', e.message);
                     return;
                 }
             }
