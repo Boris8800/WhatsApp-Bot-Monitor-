@@ -53,7 +53,7 @@
                     </div>
                     <div class="status-item" id="messagesStatus">
                         <i class="fas fa-comments"></i>
-                        <span>Mensajes: <strong>0</strong></span>
+                        <span>Messages: <strong>0</strong></span>
                     </div>
                     <div class="status-item" id="uptimeStatus">
                         <i class="fas fa-clock"></i>
@@ -166,7 +166,7 @@
                             <span>Unsaved changes</span>
                         </div>
                         <button class="btn btn-apply-config" id="applyConfig">
-                            <i class="fas fa-check"></i> Aplicar
+                            <i class="fas fa-check"></i> Apply
                         </button>
                     </div>
                 </div>
@@ -191,7 +191,7 @@
                         </div>
                     </div>
                     <button class="btn btn-save btn-gradient" id="saveConfig">
-                        <i class="fas fa-save"></i> Guardar Cambios
+                        <i class="fas fa-save"></i> Save Changes
                     </button>
                 </div>
 
@@ -330,8 +330,8 @@
                                     <div class="empty-icon">
                                         <i class="fas fa-users fa-3x"></i>
                                     </div>
-                                    <h4>No hay grupos disponibles</h4>
-                                    <p>Conecta WhatsApp para ver los grupos</p>
+                                    <h4>No groups available</h4>
+                                    <p>Connect WhatsApp to see groups</p>
                                 </div>
                             <% } %>
                         </div>
@@ -410,7 +410,7 @@
                                                     <div>
                                                         <label>Keywords:</label>
                                                         <span class="config-value">
-                                                            <%= (group.customKeywords || []).join(', ') || 'Usando configuración global' %>
+                                                            <%= (group.customKeywords || []).join(', ') || 'Using global configuration' %>
                                                         </span>
                                                     </div>
                                                 </div>
@@ -444,7 +444,7 @@
                                     <div class="empty-icon">
                                         <i class="fas fa-eye-slash fa-3x"></i>
                                     </div>
-                                    <h4>No hay grupos monitoreados</h4>
+                                    <h4>No monitored groups</h4>
                                     <p>Select groups to monitor in the "Groups" tab</p>
                                 </div>
                             <% } %>
@@ -455,9 +455,9 @@
                         <div class="logs-controls card">
                             <div class="controls-group">
                                 <div class="control-item">
-                                    <label><i class="fas fa-filter"></i> Filtrar por grupo:</label>
+                                    <label><i class="fas fa-filter"></i> Filter by group:</label>
                                     <select id="logGroupSelect" class="input-modern">
-                                        <option value="">Todos los grupos</option>
+                                        <option value="">All groups</option>
                                         <% groupsConfig.monitoredGroups.forEach(group => { %>
                                             <option value="<%= group.id %>"><%= group.name %></option>
                                         <% }); %>
@@ -491,7 +491,7 @@
                                     <i class="fas fa-comments"></i>
                                 </div>
                                 <div class="stat-content">
-                                    <h4>Total Mensajes</h4>
+                                    <h4>Total Messages</h4>
                                     <p class="stat-number" id="totalMessagesStat">0</p>
                                     <span class="stat-change positive"><i class="fas fa-arrow-up"></i> +12%</span>
                                 </div>
@@ -511,7 +511,7 @@
                                     <i class="fas fa-users"></i>
                                 </div>
                                 <div class="stat-content">
-                                    <h4>Grupos Activos</h4>
+                                    <h4>Active Groups</h4>
                                     <p class="stat-number" id="monitoredGroupsStat">0</p>
                                     <span class="stat-change neutral"><i class="fas fa-minus"></i> 0%</span>
                                 </div>
@@ -530,11 +530,11 @@
                         
                         <div class="charts-grid">
                             <div class="chart-container card">
-                                <h4><i class="fas fa-chart-line"></i> Actividad por Grupo</h4>
+                                <h4><i class="fas fa-chart-line"></i> Activity by Group</h4>
                                 <canvas id="activityChart"></canvas>
                             </div>
                             <div class="chart-container card">
-                                <h4><i class="fas fa-chart-pie"></i> Distribución de Mensajes</h4>
+                                <h4><i class="fas fa-chart-pie"></i> Message Distribution</h4>
                                 <canvas id="distributionChart"></canvas>
                             </div>
                         </div>
@@ -547,14 +547,14 @@
     <div id="groupConfigModal" class="modal">
         <div class="modal-content animate__animated animate__zoomIn">
             <div class="modal-header">
-                <h3><i class="fas fa-cog"></i> Configurar Grupo</h3>
+                <h3><i class="fas fa-cog"></i> Configure Group</h3>
                 <button class="close-modal">&times;</button>
             </div>
             <div class="modal-body">
                 <form id="groupConfigForm">
                     <input type="hidden" id="configGroupId">
                     <div class="form-group">
-                        <label><i class="fas fa-users"></i> Nombre del Grupo</label>
+                        <label><i class="fas fa-users"></i> Group Name</label>
                         <input type="text" id="configGroupName" readonly class="input-modern">
                     </div>
                     <div class="form-group">
@@ -569,13 +569,13 @@
                     <div class="form-group">
                         <label><i class="fas fa-key"></i> Keywords Específicas</label>
                         <textarea id="configGroupKeywords" rows="3" class="input-modern"
-                            placeholder="Palabras adicionales para este grupo (separadas por comas)"></textarea>
+                            placeholder="Additional keywords for this group (comma separated)"></textarea>
                         <small class="helper-text">
                             <i class="fas fa-info-circle"></i> Se suman a las palabras clave globales
                         </small>
                     </div>
                     <div class="form-group">
-                        <label><i class="fas fa-pound-sign"></i> Minimum Fare para este Grupo</label>
+                        <label><i class="fas fa-pound-sign"></i> Minimum Fare for this Group</label>
                         <div class="input-group">
                             <span class="input-prefix">£</span>
                             <input type="number" id="configGroupMinFare" min="0" class="input-modern">
@@ -586,10 +586,10 @@
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary btn-gradient">
-                            <i class="fas fa-save"></i> Guardar Configuration
+                            <i class="fas fa-save"></i> Save Configuration
                         </button>
                         <button type="button" class="btn btn-secondary close-modal">
-                            <i class="fas fa-times"></i> Cancelar
+                            <i class="fas fa-times"></i> Cancel
                         </button>
                     </div>
                 </form>
