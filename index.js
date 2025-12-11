@@ -134,7 +134,7 @@ app.post('/api/monitor-group', async (req, res) => {
     try {
         const { groupId, groupName, customKeywords, minFare } = req.body;
         
-        console.log('📥 Solicitud para monitorear grupo:', groupId, groupName);
+        console.log('📥 Request to monitor group:', groupId, groupName);
         
         if (!groupsConfig.monitoredGroups.find(g => g.id === groupId)) {
             const groupConfig = {
@@ -155,7 +155,7 @@ app.post('/api/monitor-group', async (req, res) => {
             groupsConfig.groupSettings[groupId] = groupConfig;
             saveGroupsConfig(groupsConfig);
             
-            console.log('✅ Grupo agregado al monitoreo:', groupName);
+            console.log('✅ Group added to monitoring:', groupName);
             io.emit('group-added', groupConfig);
             
             res.json({ 
@@ -164,7 +164,7 @@ app.post('/api/monitor-group', async (req, res) => {
                 group: groupConfig
             });
         } else {
-            console.log('⚠️  Grupo ya monitoreado:', groupName);
+            console.log('⚠️  Group already monitored:', groupName);
             res.json({ success: false, message: 'El grupo ya está siendo monitoreado' });
         }
     } catch (error) {
@@ -178,7 +178,7 @@ app.post('/api/unmonitor-group', (req, res) => {
     try {
         const { groupId } = req.body;
         
-        console.log('📥 Solicitud para dejar de monitorear grupo:', groupId);
+        console.log('📥 Request to stop monitoring group:', groupId);
         
         const groupBefore = groupsConfig.monitoredGroups.find(g => g.id === groupId);
         
@@ -186,12 +186,12 @@ app.post('/api/unmonitor-group', (req, res) => {
         delete groupsConfig.groupSettings[groupId];
         saveGroupsConfig(groupsConfig);
         
-        console.log('✅ Grupo eliminado del monitoreo:', groupBefore?.name || groupId);
+        console.log('✅ Group removed from monitoring:', groupBefore?.name || groupId);
         io.emit('group-removed', groupId);
         
         res.json({ 
             success: true, 
-            message: 'Grupo eliminado del monitoreo'
+            message: 'Group removed from monitoring'
         });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
@@ -222,7 +222,7 @@ app.post('/api/update-group-config', (req, res) => {
             
             res.json({ success: true, message: 'Configuración actualizada' });
         } else {
-            res.json({ success: false, message: 'Grupo no encontrado' });
+            res.json({ success: false, message: 'Group not found' });
         }
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
@@ -258,7 +258,7 @@ app.get('/api/export-group/:groupId', (req, res) => {
         const group = groupsConfig.monitoredGroups.find(g => g.id === groupId);
         
         if (!group) {
-            return res.status(404).json({ success: false, message: 'Grupo no encontrado' });
+            return res.status(404).json({ success: false, message: 'Group not found' });
         }
         
         const logFile = path.join(__dirname, 'logs', 'groups', `${groupId}.log`);
@@ -311,16 +311,16 @@ app.get('/api/group-all-messages/:groupId', async (req, res) => {
         const groupId = req.params.groupId;
         const limit = parseInt(req.query.limit) || 50;
         
-        console.log('📥 Solicitud para obtener todos los mensajes del grupo:', groupId);
+        console.log('📥 Request to get all group messages:', groupId);
         
         if (!client || !whatsappReady) {
-            return res.json({ success: false, message: 'WhatsApp no está conectado' });
+            return res.json({ success: false, message: 'WhatsApp is not connected' });
         }
         
         const chat = await client.getChatById(groupId);
         
         if (!chat) {
-            return res.json({ success: false, message: 'Grupo no encontrado' });
+            return res.json({ success: false, message: 'Group not found' });
         }
         
         // Obtener los últimos mensajes del grupo
@@ -347,11 +347,11 @@ app.get('/api/group-all-messages/:groupId', async (req, res) => {
             };
         });
         
-        console.log('✅ Mensajes obtenidos:', formattedMessages.length);
+        console.log('✅ Messages obtained:', formattedMessages.length);
         res.json({ success: true, messages: formattedMessages, total: formattedMessages.length });
         
     } catch (error) {
-        console.error('❌ Error al obtener mensajes:', error);
+        console.error('❌ Error getting messages:', error);
         res.status(500).json({ success: false, error: error.message });
     }
 });
@@ -395,7 +395,7 @@ app.post('/api/save-quick-config', (req, res) => {
 // Reconectar WhatsApp
 app.post('/api/reconnect-whatsapp', async (req, res) => {
     try {
-        console.log('🔄 Intentando reconectar WhatsApp...');
+        console.log('🔄 Attempting to reconnect WhatsApp...');
         
         if (client && client.pupPage) {
             // Intentar reinicializar la conexión
@@ -485,7 +485,7 @@ function saveGroupLog(groupId, logData) {
 }
 
 // Configuración del cliente WhatsApp
-console.log('🔧 Inicializando cliente WhatsApp...');
+console.log('🔧 Initializing WhatsApp client...');
 const client = new Client({
     authStrategy: new LocalAuth({
         dataPath: path.join(__dirname, '.wwebjs_auth')
@@ -514,36 +514,36 @@ const client = new Client({
     takeoverOnConflict: false,
     takeoverTimeoutMs: 0
 });
-console.log('✅ Cliente WhatsApp creado');
+console.log('✅ WhatsApp client created');
 
 // Deshabilitar envío de mensajes
 client.sendMessage = function() {
-    console.log('⚠️  Modo solo lectura - No se pueden enviar mensajes');
+    console.log('⚠️  Read-only mode - Cannot send messages');
     return Promise.reject('Modo solo lectura activado');
 };
 
 // Eventos del cliente
-console.log('📡 Registrando eventos del cliente...');
+console.log('📡 Registering client events...');
 
 client.on('loading_screen', (percent, message) => {
-    console.log('⏳ Cargando WhatsApp Web:', percent, message);
+    console.log('⏳ Loading WhatsApp Web:', percent, message);
     io.emit('wa-connecting', { percent, message });
 });
 
 client.on('qr', qr => {
-    console.log('📱 Código QR generado');
-    console.log('🔗 Longitud del QR:', qr.length);
-    console.log('📺 Generando QR en terminal...');
+    console.log('📱 QR Code generated');
+    console.log('🔗 QR length:', qr.length);
+    console.log('📺 Generating QR in terminal...');
     qrcode.generate(qr, { small: true });
-    console.log('📡 Enviando QR a clientes web...');
+    console.log('📡 Sending QR to web clients...');
     io.emit('qr', qr);
     io.emit('wa-qr');
-    console.log('✅ QR emitido correctamente');
+    console.log('✅ QR emitted successfully');
 });
 
 client.on('ready', async () => {
-    console.log('✅ Bot de lectura listo');
-    console.log('📊 Modo: Solo Lectura');
+    console.log('✅ Read-only bot ready');
+    console.log('📊 Mode: Read Only');
     whatsappReady = true;
     io.emit('wa-ready');
     
@@ -558,7 +558,7 @@ client.on('ready', async () => {
             timestamp: chat.timestamp ? new Date(chat.timestamp * 1000).toISOString() : null
         }));
     
-    console.log(`📁 Grupos disponibles: ${availableGroups.length}`);
+    console.log(`📁 Available groups: ${availableGroups.length}`);
     io.emit('chats-loaded', availableGroups);
     
     // Escanear grupos periódicamente
@@ -593,7 +593,7 @@ client.on('ready', async () => {
 });
 
 client.on('authenticated', () => {
-    console.log('🔐 Autenticado correctamente');
+    console.log('🔐 Authenticated successfully');
     io.emit('authenticated', true);
 });
 
@@ -667,13 +667,13 @@ client.on('message', async message => {
                     const caption = message._data?.caption || '';
                     if (caption.trim()) {
                         text = caption;
-                        console.log('📷 Mensaje multimedia con caption detectado:', caption.substring(0, 50) + '...');
+                        console.log('📷 Multimedia message with caption detected:', caption.substring(0, 50) + '...');
                     } else {
-                        console.log('📷 Mensaje multimedia sin caption (solo imagen/video)');
+                        console.log('📷 Multimedia message without caption (image/video only)');
                         return; // No hay texto para analizar
                     }
                 } catch (e) {
-                    console.log('⚠️ Error al obtener caption de multimedia:', e.message);
+                    console.log('⚠️ Error getting multimedia caption:', e.message);
                     return;
                 }
             }
@@ -772,7 +772,7 @@ client.on('message', async message => {
             }
         }
     } catch (error) {
-        console.error('Error procesando mensaje:', error);
+        console.error('Error processing message:', error);
     }
 });
 
@@ -795,11 +795,11 @@ client.on('remote_session_saved', () => {
 });
 
 // Inicializar cliente
-console.log('🚀 Iniciando conexión con WhatsApp...');
-console.log('📍 Usando Chromium:', puppeteer.executablePath());
+console.log('🚀 Starting WhatsApp connection...');
+console.log('📍 Using Chromium:', puppeteer.executablePath());
 client.initialize()
     .then(() => {
-        console.log('✅ Cliente inicializado correctamente');
+        console.log('✅ Client initialized successfully');
     })
     .catch(err => {
         console.error('❌ Error al inicializar WhatsApp:', err.message);
@@ -815,7 +815,7 @@ client.initialize()
 
 // --- Socket.io para comunicación en tiempo real ---
 io.on('connection', socket => {
-    console.log('👤 Cliente web conectado');
+    console.log('👤 Web client connected');
     
     socket.emit('config', config);
     socket.emit('groups-config', groupsConfig);
@@ -827,10 +827,10 @@ io.on('connection', socket => {
         try {
             if (whatsappReady) {
                 socket.emit('wa-ready');
-                console.log('📤 Estado enviado al cliente: READY');
+                console.log('📤 State sent to client: READY');
             } else {
                 socket.emit('wa-connecting', { message: 'Inicializando...' });
-                console.log('📤 Estado enviado al cliente: CONNECTING');
+                console.log('📤 State sent to client: CONNECTING');
             }
         } catch (err) {
             socket.emit('wa-connecting', { message: 'Cargando estado...' });
@@ -849,8 +849,8 @@ io.on('connection', socket => {
 // --- Iniciar servidor web ---
 const PORT = process.env.PORT || 3002;
 server.listen(PORT, () => {
-    console.log(`🌐 Servidor web: http://localhost:${PORT}`);
+    console.log(`🌐 Web server: http://localhost:${PORT}`);
     console.log(`🔧 Puerto: ${PORT}`);
-    console.log(`📁 Directorio de datos: ${__dirname}/data`);
-    console.log(`📝 Logs de grupos: ${__dirname}/logs/groups/`);
+    console.log(`📁 Data directory: ${__dirname}/data`);
+    console.log(`📝 Group logs: ${__dirname}/logs/groups/`);
 });

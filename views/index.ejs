@@ -22,7 +22,7 @@
                         <i class="fab fa-whatsapp"></i> WhatsApp Bot Monitor
                     </h1>
                     <div class="header-actions">
-                        <button class="btn-icon" id="refreshBtn" title="Actualizar">
+                        <button class="btn-icon" id="refreshBtn" title="Refresh">
                             <i class="fas fa-sync-alt"></i>
                         </button>
                         <button class="btn-icon" id="notificationsBtn" title="Notificaciones">
@@ -42,7 +42,7 @@
                     </div>
                     <div class="status-item" id="whatsappStatus">
                         <i class="fab fa-whatsapp"></i>
-                        <span>WhatsApp: <strong id="waConnectionState">Desconectado</strong></span>
+                        <span>WhatsApp: <strong id="waConnectionState">Disconnected</strong></span>
                         <button class="btn-reconnect" id="reconnectBtn" title="Reconectar WhatsApp">
                             <i class="fas fa-sync-alt"></i>
                         </button>
@@ -76,7 +76,7 @@
                         <p><strong>📱 Instrucciones:</strong></p>
                         <ol>
                             <li>Abre <strong>WhatsApp</strong> en tu teléfono</li>
-                            <li>Ve a <strong>Configuración → Dispositivos vinculados</strong></li>
+                            <li>Ve a <strong>Configuration → Dispositivos vinculados</strong></li>
                             <li>Toca en <strong>"Vincular un dispositivo"</strong></li>
                             <li>Escanea el código QR mostrado arriba</li>
                             <li>¡El bot comenzará a monitorear automáticamente!</li>
@@ -101,7 +101,7 @@
         <div class="main-content">
             <div class="sidebar">
                 <div class="sidebar-section card diagnostic-section">
-                    <h3><i class="fas fa-heartbeat"></i> Estado del Sistema</h3>
+                    <h3><i class="fas fa-heartbeat"></i> System Status</h3>
                     <div class="diagnostic-panel">
                         <div class="diag-item">
                             <i class="fas fa-server"></i>
@@ -113,13 +113,13 @@
                         </div>
                         <div class="diag-item">
                             <i class="fas fa-plug"></i>
-                            <span>Socket: <strong id="socketStatus">Desconectado</strong></span>
+                            <span>Socket: <strong id="socketStatus">Disconnected</strong></span>
                         </div>
                     </div>
                 </div>
 
                 <div class="sidebar-section card config-card">
-                    <h3><i class="fas fa-sliders-h"></i> Configuración Rápida</h3>
+                    <h3><i class="fas fa-sliders-h"></i> Configuration Rápida</h3>
                     <p class="config-description">Controla el comportamiento del bot</p>
                     
                     <div class="quick-config-grid">
@@ -129,7 +129,7 @@
                                     <i class="fas fa-power-off"></i>
                                 </div>
                                 <div class="config-toggle-info">
-                                    <h4>Bot Activo</h4>
+                                    <h4>Bot Active</h4>
                                     <p class="config-toggle-desc">Activar/desactivar monitoreo</p>
                                 </div>
                             </div>
@@ -147,7 +147,7 @@
                                     <i class="fas fa-eye"></i>
                                 </div>
                                 <div class="config-toggle-info">
-                                    <h4>Solo Lectura</h4>
+                                    <h4>Read Only</h4>
                                     <p class="config-toggle-desc">No enviar mensajes</p>
                                 </div>
                             </div>
@@ -175,14 +175,14 @@
                     <h3><i class="fas fa-filter"></i> Filtros Avanzados</h3>
                     <div class="form-group">
                         <label>
-                            <i class="fas fa-key"></i> Palabras Clave
+                            <i class="fas fa-key"></i> Keywords
                         </label>
                         <textarea id="keywords" rows="3" placeholder="taxi, cab, uber..."
                             class="input-modern"><%= config.keywords.join(', ') %></textarea>
                     </div>
                     <div class="form-group">
                         <label>
-                            <i class="fas fa-pound-sign"></i> Tarifa Mínima
+                            <i class="fas fa-pound-sign"></i> Minimum Fare
                         </label>
                         <div class="input-group">
                             <span class="input-prefix">£</span>
@@ -199,7 +199,7 @@
                     <h3><i class="fas fa-envelope"></i> Notificaciones Email</h3>
                     <div class="form-group">
                         <label>
-                            <i class="fas fa-at"></i> Configuración SMTP
+                            <i class="fas fa-at"></i> Configuration SMTP
                         </label>
                         <textarea id="emails" rows="4" class="input-modern" 
                             placeholder="email@example.com,app_password"><% config.emails.forEach(e => { %><%= e.user %>,<%= e.pass %>
@@ -226,7 +226,7 @@
                             <i class="fas fa-exclamation-triangle"></i>
                         </div>
                         <div class="quick-stat-info">
-                            <span class="quick-stat-label">Filtrados Hoy</span>
+                            <span class="quick-stat-label">Filtered Hoy</span>
                             <span class="quick-stat-value" id="quickFilteredToday">0</span>
                         </div>
                     </div>
@@ -283,7 +283,7 @@
                                 <i class="fas fa-globe"></i> Todos
                             </button>
                             <button class="filter-chip" data-filter="monitored">
-                                <i class="fas fa-eye"></i> Monitoreados
+                                <i class="fas fa-eye"></i> Monitored
                             </button>
                             <button class="filter-chip" data-filter="unmonitored">
                                 <i class="fas fa-eye-slash"></i> Sin Monitorear
@@ -339,7 +339,7 @@
 
                     <div id="tab-monitoring" class="tab-pane">
                         <div class="section-header">
-                            <h3><i class="fas fa-eye"></i> Grupos Monitoreados</h3>
+                            <h3><i class="fas fa-eye"></i> Grupos Monitored</h3>
                             <div class="header-controls">
                                 <span class="badge badge-primary" id="monitoredCount"><%= groupsConfig.monitoredGroups.length %></span>
                             </div>
@@ -382,7 +382,7 @@
                                                         <i class="fas fa-filter"></i>
                                                     </div>
                                                     <div>
-                                                        <span class="stat-label">Filtrados</span>
+                                                        <span class="stat-label">Filtered</span>
                                                         <span class="stat-value"><%= group.stats?.filteredMessages || 0 %></span>
                                                     </div>
                                                 </div>
@@ -408,7 +408,7 @@
                                                 <div class="config-item">
                                                     <i class="fas fa-key"></i>
                                                     <div>
-                                                        <label>Palabras Clave:</label>
+                                                        <label>Keywords:</label>
                                                         <span class="config-value">
                                                             <%= (group.customKeywords || []).join(', ') || 'Usando configuración global' %>
                                                         </span>
@@ -417,23 +417,23 @@
                                                 <div class="config-item">
                                                     <i class="fas fa-pound-sign"></i>
                                                     <div>
-                                                        <label>Tarifa Mínima:</label>
+                                                        <label>Minimum Fare:</label>
                                                         <span class="config-value">£<%= group.minFare || config.minFare %></span>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="monitored-actions">
-                                            <button class="btn btn-view-logs btn-sm" data-action="view-logs" title="Ver logs">
+                                            <button class="btn btn-view-logs btn-sm" data-action="view-logs" title="View logs">
                                                 <i class="fas fa-list"></i> Logs
                                             </button>
-                                            <button class="btn btn-export btn-sm" data-action="export" title="Exportar datos">
-                                                <i class="fas fa-download"></i> Exportar
+                                            <button class="btn btn-export btn-sm" data-action="export" title="Export datos">
+                                                <i class="fas fa-download"></i> Export
                                             </button>
                                             <button class="btn btn-config btn-sm" data-action="configure" title="Configurar">
                                                 <i class="fas fa-cog"></i>
                                             </button>
-                                            <button class="btn btn-remove btn-sm" data-action="remove" title="Eliminar">
+                                            <button class="btn btn-remove btn-sm" data-action="remove" title="Delete">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </div>
@@ -465,13 +465,13 @@
                                 </div>
                                 <div class="control-actions">
                                     <button class="btn btn-primary btn-sm" id="viewAllMessages">
-                                        <i class="fas fa-comments"></i> Ver Todos los Mensajes
+                                        <i class="fas fa-comments"></i> View All Messages
                                     </button>
                                     <button class="btn btn-secondary btn-sm" id="refreshLogs">
-                                        <i class="fas fa-sync-alt"></i> Actualizar Filtrados
+                                        <i class="fas fa-sync-alt"></i> Refresh Filtered
                                     </button>
                                     <button class="btn btn-danger btn-sm" id="clearLogs">
-                                        <i class="fas fa-trash"></i> Limpiar
+                                        <i class="fas fa-trash"></i> Clear
                                     </button>
                                 </div>
                             </div>
@@ -501,7 +501,7 @@
                                     <i class="fas fa-filter"></i>
                                 </div>
                                 <div class="stat-content">
-                                    <h4>Filtrados</h4>
+                                    <h4>Filtered</h4>
                                     <p class="stat-number" id="filteredMessagesStat">0</p>
                                     <span class="stat-change positive"><i class="fas fa-arrow-up"></i> +8%</span>
                                 </div>
@@ -567,7 +567,7 @@
                         </label>
                     </div>
                     <div class="form-group">
-                        <label><i class="fas fa-key"></i> Palabras Clave Específicas</label>
+                        <label><i class="fas fa-key"></i> Keywords Específicas</label>
                         <textarea id="configGroupKeywords" rows="3" class="input-modern"
                             placeholder="Palabras adicionales para este grupo (separadas por comas)"></textarea>
                         <small class="helper-text">
@@ -575,7 +575,7 @@
                         </small>
                     </div>
                     <div class="form-group">
-                        <label><i class="fas fa-pound-sign"></i> Tarifa Mínima para este Grupo</label>
+                        <label><i class="fas fa-pound-sign"></i> Minimum Fare para este Grupo</label>
                         <div class="input-group">
                             <span class="input-prefix">£</span>
                             <input type="number" id="configGroupMinFare" min="0" class="input-modern">
@@ -586,7 +586,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary btn-gradient">
-                            <i class="fas fa-save"></i> Guardar Configuración
+                            <i class="fas fa-save"></i> Guardar Configuration
                         </button>
                         <button type="button" class="btn btn-secondary close-modal">
                             <i class="fas fa-times"></i> Cancelar

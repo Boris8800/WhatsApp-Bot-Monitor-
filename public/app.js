@@ -1037,11 +1037,11 @@ $(document).ready(function() {
     });
     
     function loadGroupLogs(groupId) {
-        console.log('📥 Cargando logs del grupo:', groupId);
-        toastr.info('Cargando logs...', 'Logs');
+        console.log('📥 Loading group logs:', groupId);
+        toastr.info('Loading logs...', 'Logs');
         
         $.get('/api/group-logs/' + groupId, function(response) {
-            console.log('📦 Logs recibidos:', response);
+            console.log('📦 Logs received:', response);
             
             if (response.success && response.logs && response.logs.length > 0) {
                 let html = '<div class="logs-list">';
@@ -1088,7 +1088,7 @@ $(document).ready(function() {
                 $('#logsContainer').html('\
                     <div class="log-placeholder">\
                         <i class="fas fa-inbox fa-2x"></i>\
-                        <p>No hay mensajes filtrados en este grupo</p>\
+                        <p>No filtered messages in this group</p>\
                     </div>\
                 ');
                 toastr.info('No hay logs para este grupo', 'Logs');
@@ -1115,20 +1115,20 @@ $(document).ready(function() {
     
     function loadAllGroupMessages(groupId) {
         const groupName = $('#logGroupSelect option:selected').text();
-        console.log('📥 Cargando TODOS los mensajes del grupo:', groupId);
+        console.log('📥 Loading ALL messages from group:', groupId);
         
         const button = $('#viewAllMessages');
         button.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Cargando...');
         
-        toastr.info('Obteniendo mensajes del grupo...', 'Mensajes');
+        toastr.info('Getting group messages...', 'Mensajes');
         
         $.get('/api/group-all-messages/' + groupId + '?limit=100', function(response) {
             button.prop('disabled', false).html('<i class="fas fa-comments"></i> Ver Todos los Mensajes');
-            console.log('📦 Mensajes recibidos:', response);
+            console.log('📦 Messages received:', response);
             
             if (response.success && response.messages && response.messages.length > 0) {
                 let html = '<div class="logs-list">';
-                html += '<div class="log-header-title"><h3><i class="fas fa-comments"></i> Últimos ' + response.total + ' mensajes de "' + groupName + '"</h3></div>';
+                html += '<div class="log-header-title"><h3><i class="fas fa-comments"></i> Last ' + response.total + ' messages from "' + groupName + '"</h3></div>';
                 
                 // Los mensajes más recientes primero
                 const sortedMessages = response.messages.reverse();
@@ -1167,7 +1167,7 @@ $(document).ready(function() {
                 $('#logsContainer').html('\
                     <div class="log-placeholder">\
                         <i class="fas fa-inbox fa-2x"></i>\
-                        <p>No hay mensajes en este grupo</p>\
+                        <p>No messages in this group</p>\
                     </div>\
                 ');
                 toastr.info('No hay mensajes', 'Mensajes');
@@ -1175,7 +1175,7 @@ $(document).ready(function() {
                 $('#logsContainer').html('\
                     <div class="log-placeholder">\
                         <i class="fas fa-exclamation-triangle fa-2x"></i>\
-                        <p>' + (response.message || 'Error al cargar mensajes') + '</p>\
+                        <p>' + (response.message || 'Error loading messages') + '</p>\
                     </div>\
                 ');
                 toastr.warning(response.message || 'No se pudo cargar los mensajes', 'Mensajes');
@@ -1183,7 +1183,7 @@ $(document).ready(function() {
         }).fail(function(err) {
             button.prop('disabled', false).html('<i class="fas fa-comments"></i> Ver Todos los Mensajes');
             console.error('❌ Error:', err);
-            toastr.error('Error al cargar los mensajes', 'Error');
+            toastr.error('Error loading messages', 'Error');
             $('#logsContainer').html('\
                 <div class="log-placeholder">\
                     <i class="fas fa-exclamation-triangle fa-2x"></i>\
