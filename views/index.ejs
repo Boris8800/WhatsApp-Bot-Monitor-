@@ -34,7 +34,7 @@
                         </button>
                     </div>
                 </div>
-                <p class="subtitle animate__animated animate__fadeInUp">Monitoreo inteligente de grupos en tiempo real</p>
+                <p class="subtitle animate__animated animate__fadeInUp">Intelligent real-time group monitoring</p>
                 <div class="status-indicators animate__animated animate__fadeIn">
                     <div class="status-item" id="botStatus">
                         <span class="status-dot pulse"></span>
@@ -49,7 +49,7 @@
                     </div>
                     <div class="status-item" id="groupsStatus">
                         <i class="fas fa-users"></i>
-                        <span>Grupos: <strong>0</strong></span>
+                        <span>Groups: <strong>0</strong></span>
                     </div>
                     <div class="status-item" id="messagesStatus">
                         <i class="fas fa-comments"></i>
@@ -217,7 +217,7 @@
                             <i class="fas fa-check-circle"></i>
                         </div>
                         <div class="quick-stat-info">
-                            <span class="quick-stat-label">Activos Hoy</span>
+                            <span class="quick-stat-label">Active Today</span>
                             <span class="quick-stat-value" id="quickActiveToday">0</span>
                         </div>
                     </div>
@@ -226,7 +226,7 @@
                             <i class="fas fa-exclamation-triangle"></i>
                         </div>
                         <div class="quick-stat-info">
-                            <span class="quick-stat-label">Filtered Hoy</span>
+                            <span class="quick-stat-label">Filtered Today</span>
                             <span class="quick-stat-value" id="quickFilteredToday">0</span>
                         </div>
                     </div>
@@ -250,7 +250,7 @@
                     </button>
                     <button class="tab-btn" data-tab="monitoring">
                         <i class="fas fa-eye"></i> 
-                        <span>Monitoreo</span>
+                        <span>Monitoring</span>
                         <span class="tab-badge" id="monitoringBadge"><%= groupsConfig.monitoredGroups.length %></span>
                     </button>
                     <button class="tab-btn" data-tab="logs">
@@ -259,21 +259,21 @@
                     </button>
                     <button class="tab-btn" data-tab="stats">
                         <i class="fas fa-chart-bar"></i> 
-                        <span>Estadísticas</span>
+                        <span>Statistics</span>
                     </button>
                 </div>
 
                 <div class="tab-content">
                     <div id="tab-groups" class="tab-pane active">
                         <div class="section-header">
-                            <h3><i class="fas fa-search"></i> Explorar Grupos</h3>
+                            <h3><i class="fas fa-search"></i> Explore Groups</h3>
                             <div class="search-box">
                                 <i class="fas fa-search search-icon"></i>
                                 <input type="text" id="groupSearch" 
-                                    placeholder="Buscar por nombre de grupo..." 
+                                    placeholder="Search by group name..." 
                                     class="input-modern">
                                 <button class="btn btn-primary" id="searchGroups">
-                                    <i class="fas fa-search"></i> Buscar
+                                    <i class="fas fa-search"></i> Search
                                 </button>
                             </div>
                         </div>
@@ -445,7 +445,7 @@
                                         <i class="fas fa-eye-slash fa-3x"></i>
                                     </div>
                                     <h4>No hay grupos monitoreados</h4>
-                                    <p>Selecciona grupos para monitorear en la pestaña "Grupos"</p>
+                                    <p>Select groups to monitor in the "Groups" tab</p>
                                 </div>
                             <% } %>
                         </div>
@@ -479,7 +479,7 @@
                         <div class="logs-container" id="logsContainer">
                             <div class="log-placeholder">
                                 <i class="fas fa-file-alt fa-2x"></i>
-                                <p>Selecciona un filtro para ver los logs</p>
+                                <p>Select a filter to view logs</p>
                             </div>
                         </div>
                     </div>
@@ -521,7 +521,7 @@
                                     <i class="fas fa-calendar-day"></i>
                                 </div>
                                 <div class="stat-content">
-                                    <h4>Activos Hoy</h4>
+                                    <h4>Active Today</h4>
                                     <p class="stat-number" id="activeTodayStat">0</p>
                                     <span class="stat-change positive"><i class="fas fa-arrow-up"></i> +25%</span>
                                 </div>
@@ -562,7 +562,7 @@
                             <input type="checkbox" id="configGroupEnabled">
                             <span class="slider"></span>
                             <span class="switch-label">
-                                <i class="fas fa-power-off"></i> Monitoreo Activo
+                                <i class="fas fa-power-off"></i> Active Monitoring
                             </span>
                         </label>
                     </div>
