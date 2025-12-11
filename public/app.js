@@ -1154,7 +1154,7 @@ $(document).ready(function() {
                                 </div>\
                             </div>\
                             <div class="log-body">\
-                                <p>' + escapeHtml(msg.body || '[Mensaje multimedia sin caption]') + '</p>\
+                                <p>' + escapeHtml(msg.body || '[Multimedia message without caption]') + '</p>\
                             </div>\
                         </div>\
                     ';
