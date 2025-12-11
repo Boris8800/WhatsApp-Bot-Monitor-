@@ -114,14 +114,7 @@ whatsapp-bot/
 
 ## 🔧 Advanced Configuration
 
-### Keywords and Filters
-Edit `config.json`:
-```json
-{
-  "keywords": ["fare", "£", "price", "cost"],
-  "minFare": 100,
-  "botActive": true,
-  "readOnly": true
+
 }
 ```
 
