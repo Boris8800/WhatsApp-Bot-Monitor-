@@ -457,14 +457,6 @@ function checkKeywords(text, customKeywords = []) {
     );
 }
 
-function extractFare(text) {
-    const match = text.match(/£\s?(\d+)/i) || 
-                  text.match(/\$\s?(\d+)/i) ||
-                  text.match(/(\d+)\s?(?:euros|euro|€)/i) ||
-                  text.match(/(\d+)\s?(?:dólares|dolares|usd)/i);
-    return match ? parseInt(match[1],10) : null;
-}
-
 function saveGroupLog(groupId, logData) {
     const groupLogDir = path.join(__dirname, 'logs', 'groups');
     fs.ensureDirSync(groupLogDir);
@@ -655,7 +647,6 @@ client.on('message', async message => {
             // Obtener configuración específica del grupo
             const groupConfig = groupsConfig.groupSettings[chat.id._serialized] || {};
             const groupKeywords = groupConfig.customKeywords || [];
-            const groupMinFare = groupConfig.minFare || config.minFare;
             
             // Process message (including multimedia captions)
             let text = message.body || '';
@@ -682,15 +673,11 @@ client.on('message', async message => {
             
             const contact = await message.getContact();
             const hasKeywords = checkKeywords(text, groupKeywords);
-            const fare = extractFare(text);
             
             let shouldAlert = false;
             let alertType = '';
             
-            if (hasKeywords && fare && fare >= groupMinFare) {
-                shouldAlert = true;
-                alertType = 'high_fare';
-            } else if (hasKeywords) {
+            if (hasKeywords) {
                 shouldAlert = true;
                 alertType = 'keyword_match';
             }
@@ -702,7 +689,6 @@ client.on('message', async message => {
                     contact: contact.pushname || contact.number || 'Desconocido',
                     contactNumber: message.from,
                     text: text,
-                    fare: fare,
                     alertType: alertType,
                     hasMedia: message.hasMedia || false,
                     mediaType: message.type || 'chat',

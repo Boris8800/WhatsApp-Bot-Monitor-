@@ -322,7 +322,6 @@ $(document).ready(function() {
         $('#botActive').prop('checked', config.botActive);
         $('#readOnly').prop('checked', config.readOnly);
         $('#keywords').val(config.keywords.join(', '));
-        $('#minFare').val(config.minFare);
         
         const emailsText = config.emails.map(e => e.user + ',' + e.pass).join('\n');
         $('#emails').val(emailsText);
@@ -449,7 +448,6 @@ $(document).ready(function() {
                             <i class="fas fa-pound-sign"></i>\
                             <div>\
                                 <label>Tarifa Mínima:</label>\
-                                <span class="config-value">£' + (group.minFare || $('#minFare').val()) + '</span>\
                             </div>\
                         </div>\
                     </div>\
@@ -520,8 +518,6 @@ $(document).ready(function() {
             );
         }
         
-        if (updates.minFare !== undefined) {
-            card.find('.config-item:last .config-value').text('£' + updates.minFare);
         }
         
         card.addClass('animate__animated animate__pulse')
@@ -805,7 +801,6 @@ $(document).ready(function() {
                 $('#configGroupName').val(groupName);
                 $('#configGroupEnabled').prop('checked', group.enabled !== false);
                 $('#configGroupKeywords').val((group.customKeywords || []).join(', '));
-                $('#configGroupMinFare').val(group.minFare || $('#minFare').val());
                 
                 $('#groupConfigModal').addClass('active');
             }
@@ -881,7 +876,6 @@ $(document).ready(function() {
         });
     });
 
-    // Full config save (includes keywords, minFare, emails)
     $('#saveConfig').click(function() {
         const button = $(this);
         button.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Guardando...');
@@ -899,7 +893,6 @@ $(document).ready(function() {
             botActive: $('#botActive').prop('checked'),
             readOnly: $('#readOnly').prop('checked'),
             keywords: $('#keywords').val().split(',').map(k => k.trim()).filter(k => k),
-            minFare: parseInt($('#minFare').val()) || 100,
             emails: emails
         };
         
@@ -930,7 +923,6 @@ $(document).ready(function() {
         const updates = {
             enabled: $('#configGroupEnabled').prop('checked'),
             customKeywords: $('#configGroupKeywords').val().split(',').map(k => k.trim()).filter(k => k),
-            minFare: parseInt($('#configGroupMinFare').val()) || $('#minFare').val()
         };
         
         $.post('/api/update-group-config', {

@@ -6,7 +6,6 @@
         "fare",
         "£"
     ],
-    "minFare": 100,
     "notifications": {
         "sound": true,
         "desktop": true
