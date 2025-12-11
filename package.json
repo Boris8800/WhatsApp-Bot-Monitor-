@@ -1,0 +1,44 @@
+{
+  "name": "whatsapp-group-monitor",
+  "version": "2.0.0",
+  "description": "WhatsApp Group Monitoring Bot with Specific Groups",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "pm2-start": "pm2 start index.js --name whatsapp-group-monitor",
+    "pm2-stop": "pm2 stop whatsapp-group-monitor",
+    "pm2-restart": "pm2 restart whatsapp-group-monitor",
+    "pm2-logs": "pm2 logs whatsapp-group-monitor",
+    "pm2-status": "pm2 status whatsapp-group-monitor",
+    "maintenance": "./maintenance.sh",
+    "backup": "tar -czf backup-$(date +%Y%m%d-%H%M%S).tar.gz *.js views/ public/ config.json data/ logs/",
+    "update": "npm update && echo 'Dependencias actualizadas'",
+    "reset": "pm2 stop whatsapp-group-monitor && rm -rf .wwebjs_auth && pm2 start index.js --name whatsapp-group-monitor",
+    "clean-logs": "rm -f logs/*.log logs/groups/*.log && echo '{}' > logs/stats.json"
+  },
+  "keywords": [
+    "whatsapp",
+    "bot",
+    "monitor",
+    "groups",
+    "reader",
+    "web"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "fs-extra": "^11.2.0",
+    "nodemailer": "^6.9.7",
+    "puppeteer": "^24.32.1",
+    "qrcode-terminal": "^0.12.0",
+    "socket.io": "^4.7.2",
+    "socket.io-client": "^4.8.1",
+    "whatsapp-web.js": "^1.23.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

@@ -1,0 +1,41 @@
+# Dependencias
+node_modules/
+package-lock.json
+
+# Archivos de WhatsApp (sesiones y cache)
+.wwebjs_auth/
+.wwebjs_cache/
+
+# Datos privados
+data/contacts/
+data/exports/
+logs/
+
+# Configuración (contiene datos privados)
+config.json
+
+# PM2
+.pm2/
+ecosystem.config.js
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Archivos temporales
+*.log
+*.tmp
+*.bak
+*.backup_*
+
+# Otros
+cursor.AppImage
+# Code Citations.md
+MEJORAS_WEB.md
+test-qr.js

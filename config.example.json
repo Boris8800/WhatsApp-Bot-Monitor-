@@ -1,0 +1,15 @@
+{
+    "botActive": true,
+    "readOnly": true,
+    "monitorAllGroups": false,
+    "keywords": [
+        "fare",
+        "£"
+    ],
+    "minFare": 100,
+    "notifications": {
+        "sound": true,
+        "desktop": true
+    },
+    "autoSave": true
+}

@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Bot Monitor - Dashboard Pro</title>
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <div class="header-top">
+                    <h1 class="animate__animated animate__fadeInDown">
+                        <i class="fab fa-whatsapp"></i> WhatsApp Bot Monitor
+                    </h1>
+                    <div class="header-actions">
+                        <button class="btn-icon" id="refreshBtn" title="Actualizar">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                        <button class="btn-icon" id="notificationsBtn" title="Notificaciones">
+                            <i class="fas fa-bell"></i>
+                            <span class="notification-badge">0</span>
+                        </button>
+                        <button class="btn-icon" id="settingsBtn" title="Ajustes">
+                            <i class="fas fa-cog"></i>
+                        </button>
+                    </div>
+                </div>
+                <p class="subtitle animate__animated animate__fadeInUp">Monitoreo inteligente de grupos en tiempo real</p>
+                <div class="status-indicators animate__animated animate__fadeIn">
+                    <div class="status-item" id="botStatus">
+                        <span class="status-dot pulse"></span>
+                        <span>Bot: Conectando...</span>
+                    </div>
+                    <div class="status-item" id="whatsappStatus">
+                        <i class="fab fa-whatsapp"></i>
+                        <span>WhatsApp: <strong id="waConnectionState">Desconectado</strong></span>
+                        <button class="btn-reconnect" id="reconnectBtn" title="Reconectar WhatsApp">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                    <div class="status-item" id="groupsStatus">
+                        <i class="fas fa-users"></i>
+                        <span>Grupos: <strong>0</strong></span>
+                    </div>
+                    <div class="status-item" id="messagesStatus">
+                        <i class="fas fa-comments"></i>
+                        <span>Mensajes: <strong>0</strong></span>
+                    </div>
+                    <div class="status-item" id="uptimeStatus">
+                        <i class="fas fa-clock"></i>
+                        <span>Uptime: <strong id="uptime">00:00:00</strong></span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div id="qrModal" class="modal">
+            <div class="modal-content animate__animated animate__zoomIn">
+                <div class="modal-header">
+                    <h3><i class="fas fa-qrcode"></i> Escanear Código QR</h3>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div id="qrcodeContainer" class="qr-container"></div>
+                    <p class="qr-text">Escanea este código con WhatsApp en tu teléfono</p>
+                    <div class="qr-instructions">
+                        <p><strong>📱 Instrucciones:</strong></p>
+                        <ol>
+                            <li>Abre <strong>WhatsApp</strong> en tu teléfono</li>
+                            <li>Ve a <strong>Configuración → Dispositivos vinculados</strong></li>
+                            <li>Toca en <strong>"Vincular un dispositivo"</strong></li>
+                            <li>Escanea el código QR mostrado arriba</li>
+                            <li>¡El bot comenzará a monitorear automáticamente!</li>
+                        </ol>
+                    </div>
+                    <div class="qr-timer">
+                        <i class="fas fa-hourglass-half"></i>
+                        <span>El código expira en: <strong id="qrTimer">60</strong>s</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botón de reconexión prominente -->
+        <div class="reconnect-panel">
+            <button class="btn-reconnect-large" id="reconnectLargeBtn">
+                <i class="fas fa-sync-alt"></i>
+                <span>Reconectar WhatsApp</span>
+            </button>
+        </div>
+
+        <div class="main-content">
+            <div class="sidebar">
+                <div class="sidebar-section card diagnostic-section">
+                    <h3><i class="fas fa-heartbeat"></i> Estado del Sistema</h3>
+                    <div class="diagnostic-panel">
+                        <div class="diag-item">
+                            <i class="fas fa-server"></i>
+                            <span>Servidor: <strong id="serverStatus">Conectando...</strong></span>
+                        </div>
+                        <div class="diag-item">
+                            <i class="fab fa-whatsapp"></i>
+                            <span>WhatsApp: <strong id="waStatus">Iniciando...</strong></span>
+                        </div>
+                        <div class="diag-item">
+                            <i class="fas fa-plug"></i>
+                            <span>Socket: <strong id="socketStatus">Desconectado</strong></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-section card config-card">
+                    <h3><i class="fas fa-sliders-h"></i> Configuración Rápida</h3>
+                    <p class="config-description">Controla el comportamiento del bot</p>
+                    
+                    <div class="quick-config-grid">
+                        <div class="config-toggle-card">
+                            <div class="config-toggle-header">
+                                <div class="config-icon power">
+                                    <i class="fas fa-power-off"></i>
+                                </div>
+                                <div class="config-toggle-info">
+                                    <h4>Bot Activo</h4>
+                                    <p class="config-toggle-desc">Activar/desactivar monitoreo</p>
+                                </div>
+                            </div>
+                            <label class="switch-modern">
+                                <input type="checkbox" id="botActive" <%= config.botActive ? 'checked' : '' %>>
+                                <span class="slider-modern">
+                                    <span class="slider-button"></span>
+                                </span>
+                            </label>
+                        </div>
+
+                        <div class="config-toggle-card">
+                            <div class="config-toggle-header">
+                                <div class="config-icon readonly">
+                                    <i class="fas fa-eye"></i>
+                                </div>
+                                <div class="config-toggle-info">
+                                    <h4>Solo Lectura</h4>
+                                    <p class="config-toggle-desc">No enviar mensajes</p>
+                                </div>
+                            </div>
+                            <label class="switch-modern">
+                                <input type="checkbox" id="readOnly" <%= config.readOnly ? 'checked' : '' %>>
+                                <span class="slider-modern">
+                                    <span class="slider-button"></span>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="config-status-bar">
+                        <div class="status-indicator" id="configStatus">
+                            <i class="fas fa-circle"></i>
+                            <span>Cambios sin guardar</span>
+                        </div>
+                        <button class="btn btn-apply-config" id="applyConfig">
+                            <i class="fas fa-check"></i> Aplicar
+                        </button>
+                    </div>
+                </div>
+
+                <div class="sidebar-section card">
+                    <h3><i class="fas fa-filter"></i> Filtros Avanzados</h3>
+                    <div class="form-group">
+                        <label>
+                            <i class="fas fa-key"></i> Palabras Clave
+                        </label>
+                        <textarea id="keywords" rows="3" placeholder="taxi, cab, uber..."
+                            class="input-modern"><%= config.keywords.join(', ') %></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <i class="fas fa-pound-sign"></i> Tarifa Mínima
+                        </label>
+                        <div class="input-group">
+                            <span class="input-prefix">£</span>
+                            <input type="number" id="minFare" value="<%= config.minFare %>" 
+                                class="input-modern" min="0" step="10">
+                        </div>
+                    </div>
+                    <button class="btn btn-save btn-gradient" id="saveConfig">
+                        <i class="fas fa-save"></i> Guardar Cambios
+                    </button>
+                </div>
+
+                <div class="sidebar-section card">
+                    <h3><i class="fas fa-envelope"></i> Notificaciones Email</h3>
+                    <div class="form-group">
+                        <label>
+                            <i class="fas fa-at"></i> Configuración SMTP
+                        </label>
+                        <textarea id="emails" rows="4" class="input-modern" 
+                            placeholder="email@example.com,app_password"><% config.emails.forEach(e => { %><%= e.user %>,<%= e.pass %>
+<% }); %></textarea>
+                        <small class="helper-text">
+                            <i class="fas fa-info-circle"></i> Formato: email,contraseña_app (uno por línea)
+                        </small>
+                    </div>
+                </div>
+
+                <div class="sidebar-section card quick-stats">
+                    <h3><i class="fas fa-chart-line"></i> Resumen Rápido</h3>
+                    <div class="quick-stat-item">
+                        <div class="quick-stat-icon success">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="quick-stat-info">
+                            <span class="quick-stat-label">Activos Hoy</span>
+                            <span class="quick-stat-value" id="quickActiveToday">0</span>
+                        </div>
+                    </div>
+                    <div class="quick-stat-item">
+                        <div class="quick-stat-icon warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="quick-stat-info">
+                            <span class="quick-stat-label">Filtrados Hoy</span>
+                            <span class="quick-stat-value" id="quickFilteredToday">0</span>
+                        </div>
+                    </div>
+                    <div class="quick-stat-item">
+                        <div class="quick-stat-icon info">
+                            <i class="fas fa-chart-pie"></i>
+                        </div>
+                        <div class="quick-stat-info">
+                            <span class="quick-stat-label">Tasa de Filtrado</span>
+                            <span class="quick-stat-value" id="quickFilterRate">0%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="main-panel">
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="groups">
+                        <i class="fas fa-users"></i> 
+                        <span>Grupos</span>
+                    </button>
+                    <button class="tab-btn" data-tab="monitoring">
+                        <i class="fas fa-eye"></i> 
+                        <span>Monitoreo</span>
+                        <span class="tab-badge" id="monitoringBadge"><%= groupsConfig.monitoredGroups.length %></span>
+                    </button>
+                    <button class="tab-btn" data-tab="logs">
+                        <i class="fas fa-list"></i> 
+                        <span>Logs</span>
+                    </button>
+                    <button class="tab-btn" data-tab="stats">
+                        <i class="fas fa-chart-bar"></i> 
+                        <span>Estadísticas</span>
+                    </button>
+                </div>
+
+                <div class="tab-content">
+                    <div id="tab-groups" class="tab-pane active">
+                        <div class="section-header">
+                            <h3><i class="fas fa-search"></i> Explorar Grupos</h3>
+                            <div class="search-box">
+                                <i class="fas fa-search search-icon"></i>
+                                <input type="text" id="groupSearch" 
+                                    placeholder="Buscar por nombre de grupo..." 
+                                    class="input-modern">
+                                <button class="btn btn-primary" id="searchGroups">
+                                    <i class="fas fa-search"></i> Buscar
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-bar">
+                            <button class="filter-chip active" data-filter="all">
+                                <i class="fas fa-globe"></i> Todos
+                            </button>
+                            <button class="filter-chip" data-filter="monitored">
+                                <i class="fas fa-eye"></i> Monitoreados
+                            </button>
+                            <button class="filter-chip" data-filter="unmonitored">
+                                <i class="fas fa-eye-slash"></i> Sin Monitorear
+                            </button>
+                        </div>
+
+                        <div class="groups-list" id="availableGroups">
+                            <% if (availableGroups && availableGroups.length > 0) { %>
+                                <% availableGroups.forEach(group => { %>
+                                    <div class="group-card card animate__animated animate__fadeInUp" data-group-id="<%= group.id %>">
+                                        <div class="group-card-header">
+                                            <div class="group-avatar">
+                                                <i class="fas fa-users"></i>
+                                            </div>
+                                            <div class="group-info">
+                                                <h4><%= group.name %></h4>
+                                                <p class="group-meta">
+                                                    <i class="fas fa-user-friends"></i> <%= group.participants || 0 %> participantes
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="group-card-body">
+                                            <p class="group-id"><small><%= group.id %></small></p>
+                                        </div>
+                                        <div class="group-actions">
+                                            <% const isMonitored = groupsConfig.monitoredGroups.some(g => g.id === group.id); %>
+                                            <% if (isMonitored) { %>
+                                                <button class="btn btn-monitoring monitoring" data-action="unmonitor">
+                                                    <i class="fas fa-eye-slash"></i> Dejar de Monitorear
+                                                </button>
+                                                <button class="btn btn-config" data-action="configure">
+                                                    <i class="fas fa-cog"></i>
+                                                </button>
+                                            <% } else { %>
+                                                <button class="btn btn-monitoring" data-action="monitor">
+                                                    <i class="fas fa-eye"></i> Monitorear
+                                                </button>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                <% }); %>
+                            <% } else { %>
+                                <div class="empty-state animate__animated animate__fadeIn">
+                                    <div class="empty-icon">
+                                        <i class="fas fa-users fa-3x"></i>
+                                    </div>
+                                    <h4>No hay grupos disponibles</h4>
+                                    <p>Conecta WhatsApp para ver los grupos</p>
+                                </div>
+                            <% } %>
+                        </div>
+                    </div>
+
+                    <div id="tab-monitoring" class="tab-pane">
+                        <div class="section-header">
+                            <h3><i class="fas fa-eye"></i> Grupos Monitoreados</h3>
+                            <div class="header-controls">
+                                <span class="badge badge-primary" id="monitoredCount"><%= groupsConfig.monitoredGroups.length %></span>
+                            </div>
+                        </div>
+                        
+                        <div class="monitored-groups" id="monitoredGroups">
+                            <% if (groupsConfig.monitoredGroups.length > 0) { %>
+                                <% groupsConfig.monitoredGroups.forEach(group => { %>
+                                    <div class="monitored-card card animate__animated animate__fadeInUp" data-group-id="<%= group.id %>">
+                                        <div class="monitored-header">
+                                            <div class="monitored-title">
+                                                <div class="group-avatar-sm">
+                                                    <i class="fas fa-users"></i>
+                                                </div>
+                                                <div>
+                                                    <h4><%= group.name %></h4>
+                                                    <span class="monitored-id"><small><%= group.id %></small></span>
+                                                </div>
+                                            </div>
+                                            <div class="monitored-status">
+                                                <span class="status-badge <%= group.enabled ? 'active' : 'inactive' %>">
+                                                    <i class="fas fa-circle"></i>
+                                                    <%= group.enabled ? 'Activo' : 'Inactivo' %>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="monitored-body">
+                                            <div class="monitored-stats">
+                                                <div class="stat">
+                                                    <div class="stat-icon">
+                                                        <i class="fas fa-comments"></i>
+                                                    </div>
+                                                    <div>
+                                                        <span class="stat-label">Total</span>
+                                                        <span class="stat-value"><%= group.stats?.totalMessages || 0 %></span>
+                                                    </div>
+                                                </div>
+                                                <div class="stat">
+                                                    <div class="stat-icon warning">
+                                                        <i class="fas fa-filter"></i>
+                                                    </div>
+                                                    <div>
+                                                        <span class="stat-label">Filtrados</span>
+                                                        <span class="stat-value"><%= group.stats?.filteredMessages || 0 %></span>
+                                                    </div>
+                                                </div>
+                                                <div class="stat">
+                                                    <div class="stat-icon info">
+                                                        <i class="fas fa-clock"></i>
+                                                    </div>
+                                                    <div>
+                                                        <span class="stat-label">Última Actividad</span>
+                                                        <span class="stat-value-small">
+                                                            <%= group.stats?.lastActivity ? 
+                                                                new Date(group.stats.lastActivity).toLocaleString('es-ES', { 
+                                                                    hour: '2-digit', 
+                                                                    minute: '2-digit',
+                                                                    day: '2-digit',
+                                                                    month: 'short'
+                                                                }) : 'Nunca' %>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="monitored-config">
+                                                <div class="config-item">
+                                                    <i class="fas fa-key"></i>
+                                                    <div>
+                                                        <label>Palabras Clave:</label>
+                                                        <span class="config-value">
+                                                            <%= (group.customKeywords || []).join(', ') || 'Usando configuración global' %>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="config-item">
+                                                    <i class="fas fa-pound-sign"></i>
+                                                    <div>
+                                                        <label>Tarifa Mínima:</label>
+                                                        <span class="config-value">£<%= group.minFare || config.minFare %></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="monitored-actions">
+                                            <button class="btn btn-view-logs btn-sm" data-action="view-logs" title="Ver logs">
+                                                <i class="fas fa-list"></i> Logs
+                                            </button>
+                                            <button class="btn btn-export btn-sm" data-action="export" title="Exportar datos">
+                                                <i class="fas fa-download"></i> Exportar
+                                            </button>
+                                            <button class="btn btn-config btn-sm" data-action="configure" title="Configurar">
+                                                <i class="fas fa-cog"></i>
+                                            </button>
+                                            <button class="btn btn-remove btn-sm" data-action="remove" title="Eliminar">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                <% }); %>
+                            <% } else { %>
+                                <div class="empty-state animate__animated animate__fadeIn">
+                                    <div class="empty-icon">
+                                        <i class="fas fa-eye-slash fa-3x"></i>
+                                    </div>
+                                    <h4>No hay grupos monitoreados</h4>
+                                    <p>Selecciona grupos para monitorear en la pestaña "Grupos"</p>
+                                </div>
+                            <% } %>
+                        </div>
+                    </div>
+
+                    <div id="tab-logs" class="tab-pane">
+                        <div class="logs-controls card">
+                            <div class="controls-group">
+                                <div class="control-item">
+                                    <label><i class="fas fa-filter"></i> Filtrar por grupo:</label>
+                                    <select id="logGroupSelect" class="input-modern">
+                                        <option value="">Todos los grupos</option>
+                                        <% groupsConfig.monitoredGroups.forEach(group => { %>
+                                            <option value="<%= group.id %>"><%= group.name %></option>
+                                        <% }); %>
+                                    </select>
+                                </div>
+                                <div class="control-actions">
+                                    <button class="btn btn-primary btn-sm" id="viewAllMessages">
+                                        <i class="fas fa-comments"></i> Ver Todos los Mensajes
+                                    </button>
+                                    <button class="btn btn-secondary btn-sm" id="refreshLogs">
+                                        <i class="fas fa-sync-alt"></i> Actualizar Filtrados
+                                    </button>
+                                    <button class="btn btn-danger btn-sm" id="clearLogs">
+                                        <i class="fas fa-trash"></i> Limpiar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="logs-container" id="logsContainer">
+                            <div class="log-placeholder">
+                                <i class="fas fa-file-alt fa-2x"></i>
+                                <p>Selecciona un filtro para ver los logs</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="tab-stats" class="tab-pane">
+                        <div class="stats-grid">
+                            <div class="stat-card card gradient-blue">
+                                <div class="stat-icon">
+                                    <i class="fas fa-comments"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h4>Total Mensajes</h4>
+                                    <p class="stat-number" id="totalMessagesStat">0</p>
+                                    <span class="stat-change positive"><i class="fas fa-arrow-up"></i> +12%</span>
+                                </div>
+                            </div>
+                            <div class="stat-card card gradient-green">
+                                <div class="stat-icon">
+                                    <i class="fas fa-filter"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h4>Filtrados</h4>
+                                    <p class="stat-number" id="filteredMessagesStat">0</p>
+                                    <span class="stat-change positive"><i class="fas fa-arrow-up"></i> +8%</span>
+                                </div>
+                            </div>
+                            <div class="stat-card card gradient-purple">
+                                <div class="stat-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h4>Grupos Activos</h4>
+                                    <p class="stat-number" id="monitoredGroupsStat">0</p>
+                                    <span class="stat-change neutral"><i class="fas fa-minus"></i> 0%</span>
+                                </div>
+                            </div>
+                            <div class="stat-card card gradient-orange">
+                                <div class="stat-icon">
+                                    <i class="fas fa-calendar-day"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h4>Activos Hoy</h4>
+                                    <p class="stat-number" id="activeTodayStat">0</p>
+                                    <span class="stat-change positive"><i class="fas fa-arrow-up"></i> +25%</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="charts-grid">
+                            <div class="chart-container card">
+                                <h4><i class="fas fa-chart-line"></i> Actividad por Grupo</h4>
+                                <canvas id="activityChart"></canvas>
+                            </div>
+                            <div class="chart-container card">
+                                <h4><i class="fas fa-chart-pie"></i> Distribución de Mensajes</h4>
+                                <canvas id="distributionChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="groupConfigModal" class="modal">
+        <div class="modal-content animate__animated animate__zoomIn">
+            <div class="modal-header">
+                <h3><i class="fas fa-cog"></i> Configurar Grupo</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="groupConfigForm">
+                    <input type="hidden" id="configGroupId">
+                    <div class="form-group">
+                        <label><i class="fas fa-users"></i> Nombre del Grupo</label>
+                        <input type="text" id="configGroupName" readonly class="input-modern">
+                    </div>
+                    <div class="form-group">
+                        <label class="switch">
+                            <input type="checkbox" id="configGroupEnabled">
+                            <span class="slider"></span>
+                            <span class="switch-label">
+                                <i class="fas fa-power-off"></i> Monitoreo Activo
+                            </span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-key"></i> Palabras Clave Específicas</label>
+                        <textarea id="configGroupKeywords" rows="3" class="input-modern"
+                            placeholder="Palabras adicionales para este grupo (separadas por comas)"></textarea>
+                        <small class="helper-text">
+                            <i class="fas fa-info-circle"></i> Se suman a las palabras clave globales
+                        </small>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-pound-sign"></i> Tarifa Mínima para este Grupo</label>
+                        <div class="input-group">
+                            <span class="input-prefix">£</span>
+                            <input type="number" id="configGroupMinFare" min="0" class="input-modern">
+                        </div>
+                        <small class="helper-text">
+                            <i class="fas fa-info-circle"></i> 0 para usar el valor global
+                        </small>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary btn-gradient">
+                            <i class="fas fa-save"></i> Guardar Configuración
+                        </button>
+                        <button type="button" class="btn btn-secondary close-modal">
+                            <i class="fas fa-times"></i> Cancelar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script src="/app.js"></script>
+</body>
+</html>
