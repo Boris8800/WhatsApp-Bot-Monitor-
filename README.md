@@ -1,121 +1,121 @@
 # WhatsApp Bot - Group Monitor
 
-Bot de monitoreo de grupos de WhatsApp que filtra mensajes por palabras clave y tarifas. Funciona en modo solo lectura.
+WhatsApp group monitoring bot that filters messages by keywords and fares. Works in read-only mode.
 
-## 🌟 Características
+## 🌟 Features
 
-- ✅ **Modo Solo Lectura**: No envía mensajes, solo monitorea
-- 🔍 **Filtrado Inteligente**: Busca palabras clave y tarifas específicas
-- 📱 **Interfaz Web**: Panel de control responsive con Socket.IO en tiempo real
-- 📊 **Estadísticas**: Visualización de grupos monitoreados y actividad
-- 💾 **Logs Persistentes**: Guarda mensajes importantes en archivos JSON
-- 🖼️ **Soporte Multimedia**: Detecta y procesa captions de imágenes/videos
-- 📤 **Exportación**: Exporta logs en formato JSON o CSV
-- 🔄 **Auto-Reconexión**: Se reconecta automáticamente si pierde conexión
+- ✅ **Read-Only Mode**: Doesn't send messages, only monitors
+- 🔍 **Intelligent Filtering**: Searches for keywords and specific fares
+- 📱 **Web Interface**: Responsive control panel with real-time Socket.IO
+- 📊 **Statistics**: Visualization of monitored groups and activity
+- 💾 **Persistent Logs**: Saves important messages to JSON files
+- 🖼️ **Multimedia Support**: Detects and processes image/video captions
+- 📤 **Export**: Exports logs in JSON or CSV format
+- 🔄 **Auto-Reconnect**: Automatically reconnects if connection is lost
 
-## 📋 Requisitos
+## 📋 Requirements
 
 - Node.js 16+
-- Google Chrome (para Puppeteer)
-- PM2 (recomendado para producción)
+- Google Chrome (for Puppeteer)
+- PM2 (recommended for production)
 
-## 🚀 Instalación
+## 🚀 Installation
 
-1. **Clonar el repositorio**
+1. **Clone the repository**
 ```bash
 git clone <repo-url>
 cd whatsapp-bot
 ```
 
-2. **Instalar dependencias**
+2. **Install dependencies**
 ```bash
 npm install
 ```
 
-3. **Configurar el bot**
+3. **Configure the bot**
 ```bash
 cp config.example.json config.json
 ```
 
-Edita `config.json` con tus preferencias:
-- `keywords`: Array de palabras clave a buscar (ej: ["fare", "£"])
-- `minFare`: Tarifa mínima para alertas (ej: 100)
-- `botActive`: true para activar el monitoreo
-- `readOnly`: true para modo solo lectura (recomendado)
+Edit `config.json` with your preferences:
+- `keywords`: Array of keywords to search for (e.g., ["fare", "£"])
+- `minFare`: Minimum fare for alerts (e.g., 100)
+- `botActive`: true to enable monitoring
+- `readOnly`: true for read-only mode (recommended)
 
-4. **Crear estructura de directorios**
+4. **Create directory structure**
 ```bash
 mkdir -p data/contacts data/exports data/groups logs/groups
 ```
 
-5. **Crear archivo de grupos monitoreados**
+5. **Create monitored groups file**
 ```bash
 echo '{"monitoredGroups":[],"groupSettings":{}}' > data/groups/monitored.json
 ```
 
-## ▶️ Uso
+## ▶️ Usage
 
-### Desarrollo
+### Development
 ```bash
 node index.js
 ```
 
-### Producción (con PM2)
+### Production (with PM2)
 ```bash
 pm2 start index.js --name whatsapp-bot
 pm2 save
 pm2 startup
 ```
 
-### Acceder a la interfaz web
-Abre tu navegador en: `http://localhost:3002`
+### Access the web interface
+Open your browser at: `http://localhost:3002`
 
-## 🔐 Primera Conexión
+## 🔐 First Connection
 
-1. Inicia el bot
-2. Abre la interfaz web
-3. Escanea el código QR con WhatsApp (WhatsApp > Configuración > Dispositivos vinculados)
-4. El bot se conectará automáticamente
+1. Start the bot
+2. Open the web interface
+3. Scan the QR code with WhatsApp (WhatsApp > Settings > Linked Devices)
+4. The bot will connect automatically
 
-## 📱 Uso de la Interfaz Web
+## 📱 Using the Web Interface
 
-### Panel Principal
-- **Estado del Sistema**: Conexión de WhatsApp, grupos disponibles, monitoreados
-- **Agregar Grupos**: Selecciona grupos de WhatsApp para monitorear
-- **Configuración**: Ajusta keywords, tarifa mínima, notificaciones
+### Main Panel
+- **System Status**: WhatsApp connection, available groups, monitored groups
+- **Add Groups**: Select WhatsApp groups to monitor
+- **Configuration**: Adjust keywords, minimum fare, notifications
 
-### Logs y Mensajes
-- **Ver Logs Filtrados**: Muestra solo mensajes que coinciden con tus filtros
-- **Ver Todos los Mensajes**: Obtiene los últimos 100 mensajes del grupo
-- **Exportar**: Descarga logs en JSON o CSV
+### Logs and Messages
+- **View Filtered Logs**: Shows only messages matching your filters
+- **View All Messages**: Gets the last 100 messages from the group
+- **Export**: Download logs in JSON or CSV
 
-### Gestión
-- **Eliminar Grupos**: Deja de monitorear grupos específicos
-- **Limpiar Logs**: Borra historial de mensajes guardados
+### Management
+- **Delete Groups**: Stop monitoring specific groups
+- **Clear Logs**: Delete saved message history
 
-## 📁 Estructura del Proyecto
+## 📁 Project Structure
 
 ```
 whatsapp-bot/
-├── index.js              # Servidor principal
-├── config.json           # Configuración del bot (no incluido en git)
-├── package.json          # Dependencias
+├── index.js              # Main server
+├── config.json           # Bot configuration (not included in git)
+├── package.json          # Dependencies
 ├── public/
 │   ├── app.js           # Frontend JavaScript
-│   └── style.css        # Estilos
+│   └── style.css        # Styles
 ├── views/
-│   └── index.ejs        # Template HTML
+│   └── index.ejs        # HTML Template
 ├── data/
 │   └── groups/
-│       └── monitored.json  # Grupos monitoreados
+│       └── monitored.json  # Monitored groups
 └── logs/
-    └── groups/          # Logs por grupo
+    └── groups/          # Logs by group
 ```
 
-## 🔧 Configuración Avanzada
+## 🔧 Advanced Configuration
 
-### Keywords y Filtros
-Edita `config.json`:
+### Keywords and Filters
+Edit `config.json`:
 ```json
 {
   "keywords": ["fare", "£", "price", "cost"],
@@ -125,77 +125,77 @@ Edita `config.json`:
 }
 ```
 
-### Configuración por Grupo
-La interfaz web permite configurar:
-- Keywords específicas por grupo
-- Tarifa mínima diferente por grupo
-- Estadísticas de actividad
+### Per-Group Configuration
+The web interface allows you to configure:
+- Specific keywords per group
+- Different minimum fare per group
+- Activity statistics
 
-## 🛠️ Mantenimiento
+## 🛠️ Maintenance
 
-### Ver logs de PM2
+### View PM2 logs
 ```bash
 pm2 logs whatsapp-bot
 ```
 
-### Reiniciar el bot
+### Restart the bot
 ```bash
 pm2 restart whatsapp-bot
 ```
 
-### Detener el bot
+### Stop the bot
 ```bash
 pm2 stop whatsapp-bot
 ```
 
-### Limpiar sesión (si hay problemas de conexión)
+### Clear session (if connection issues)
 ```bash
 pm2 stop whatsapp-bot
 rm -rf .wwebjs_auth .wwebjs_cache
 pm2 start whatsapp-bot
 ```
 
-## 🐛 Solución de Problemas
+## 🐛 Troubleshooting
 
-### El bot no se conecta
-1. Verifica que Chrome esté instalado
-2. Elimina `.wwebjs_auth` y `.wwebjs_cache`
-3. Escanea nuevamente el código QR
+### Bot won't connect
+1. Verify Chrome is installed
+2. Delete `.wwebjs_auth` and `.wwebjs_cache`
+3. Scan the QR code again
 
-### No detecta mensajes multimedia
-- El bot extrae captions de imágenes/videos
-- Si la imagen no tiene texto (caption), no será procesada
+### Not detecting multimedia messages
+- The bot extracts captions from images/videos
+- If the image has no text (caption), it won't be processed
 
-### Grupos no aparecen
-- Espera a que WhatsApp sincronice (puede tardar 30-60 segundos)
-- Verifica que el bot tenga acceso a los grupos
+### Groups don't appear
+- Wait for WhatsApp to sync (may take 30-60 seconds)
+- Verify the bot has access to the groups
 
-## 🔒 Seguridad
+## 🔒 Security
 
-- **Modo Solo Lectura**: El bot no puede enviar mensajes
-- **Datos Locales**: Toda la información se guarda localmente
-- **Sin Conexión Externa**: No envía datos a servidores externos
-- **Sesión Privada**: Los archivos de autenticación están en `.gitignore`
+- **Read-Only Mode**: The bot cannot send messages
+- **Local Data**: All information is saved locally
+- **No External Connection**: Doesn't send data to external servers
+- **Private Session**: Authentication files are in `.gitignore`
 
-## 📝 Notas
+## 📝 Notes
 
-- El bot debe permanecer conectado para monitorear mensajes en tiempo real
-- Los logs se guardan automáticamente cuando hay coincidencias
-- La interfaz web se actualiza en tiempo real con Socket.IO
-- Funciona con hasta 42+ grupos simultáneamente
+- The bot must remain connected to monitor messages in real-time
+- Logs are automatically saved when matches are found
+- The web interface updates in real-time with Socket.IO
+- Works with up to 42+ groups simultaneously
 
-## 🤝 Contribuir
+## 🤝 Contributing
 
-1. Fork el proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/nueva-funcionalidad`)
-3. Commit tus cambios (`git commit -am 'Agrega nueva funcionalidad'`)
-4. Push a la rama (`git push origin feature/nueva-funcionalidad`)
-5. Crea un Pull Request
+1. Fork the project
+2. Create a feature branch (`git checkout -b feature/new-feature`)
+3. Commit your changes (`git commit -am 'Add new feature'`)
+4. Push to the branch (`git push origin feature/new-feature`)
+5. Create a Pull Request
 
-## 📄 Licencia
+## 📄 License
 
-MIT License - Úsalo libremente para proyectos personales o comerciales.
+MIT License - Use freely for personal or commercial projects.
 
 ## ⚠️ Disclaimer
 
-Este bot es para uso educativo y personal. Asegúrate de cumplir con los términos de servicio de WhatsApp y las leyes locales de privacidad al monitorear conversaciones.
+This bot is for educational and personal use. Make sure to comply with WhatsApp's terms of service and local privacy laws when monitoring conversations.
