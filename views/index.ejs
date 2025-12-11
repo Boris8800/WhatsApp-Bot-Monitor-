@@ -105,11 +105,11 @@
                     <div class="diagnostic-panel">
                         <div class="diag-item">
                             <i class="fas fa-server"></i>
-                            <span>Servidor: <strong id="serverStatus">Conectando...</strong></span>
+                            <span>Server: <strong id="serverStatus">Connecting...</strong></span>
                         </div>
                         <div class="diag-item">
                             <i class="fab fa-whatsapp"></i>
-                            <span>WhatsApp: <strong id="waStatus">Iniciando...</strong></span>
+                            <span>WhatsApp: <strong id="waStatus">Starting...</strong></span>
                         </div>
                         <div class="diag-item">
                             <i class="fas fa-plug"></i>
@@ -119,8 +119,8 @@
                 </div>
 
                 <div class="sidebar-section card config-card">
-                    <h3><i class="fas fa-sliders-h"></i> Configuration Rápida</h3>
-                    <p class="config-description">Controla el comportamiento del bot</p>
+                    <h3><i class="fas fa-sliders-h"></i> Quick Configuration</h3>
+                    <p class="config-description">Controls bot behavior</p>
                     
                     <div class="quick-config-grid">
                         <div class="config-toggle-card">
@@ -130,7 +130,7 @@
                                 </div>
                                 <div class="config-toggle-info">
                                     <h4>Bot Active</h4>
-                                    <p class="config-toggle-desc">Activar/desactivar monitoreo</p>
+                                    <p class="config-toggle-desc">Enable/disable monitoring</p>
                                 </div>
                             </div>
                             <label class="switch-modern">
@@ -163,7 +163,7 @@
                     <div class="config-status-bar">
                         <div class="status-indicator" id="configStatus">
                             <i class="fas fa-circle"></i>
-                            <span>Cambios sin guardar</span>
+                            <span>Unsaved changes</span>
                         </div>
                         <button class="btn btn-apply-config" id="applyConfig">
                             <i class="fas fa-check"></i> Aplicar
@@ -172,7 +172,7 @@
                 </div>
 
                 <div class="sidebar-section card">
-                    <h3><i class="fas fa-filter"></i> Filtros Avanzados</h3>
+                    <h3><i class="fas fa-filter"></i> Advanced Filters</h3>
                     <div class="form-group">
                         <label>
                             <i class="fas fa-key"></i> Keywords
@@ -199,19 +199,19 @@
                     <h3><i class="fas fa-envelope"></i> Notificaciones Email</h3>
                     <div class="form-group">
                         <label>
-                            <i class="fas fa-at"></i> Configuration SMTP
+                            <i class="fas fa-at"></i> SMTP Configuration
                         </label>
                         <textarea id="emails" rows="4" class="input-modern" 
                             placeholder="email@example.com,app_password"><% config.emails.forEach(e => { %><%= e.user %>,<%= e.pass %>
 <% }); %></textarea>
                         <small class="helper-text">
-                            <i class="fas fa-info-circle"></i> Formato: email,contraseña_app (uno por línea)
+                            <i class="fas fa-info-circle"></i> Format: email,app_password (one per line)
                         </small>
                     </div>
                 </div>
 
                 <div class="sidebar-section card quick-stats">
-                    <h3><i class="fas fa-chart-line"></i> Resumen Rápido</h3>
+                    <h3><i class="fas fa-chart-line"></i> Quick Summary</h3>
                     <div class="quick-stat-item">
                         <div class="quick-stat-icon success">
                             <i class="fas fa-check-circle"></i>
@@ -235,7 +235,7 @@
                             <i class="fas fa-chart-pie"></i>
                         </div>
                         <div class="quick-stat-info">
-                            <span class="quick-stat-label">Tasa de Filtrado</span>
+                            <span class="quick-stat-label">Filter Rate</span>
                             <span class="quick-stat-value" id="quickFilterRate">0%</span>
                         </div>
                     </div>

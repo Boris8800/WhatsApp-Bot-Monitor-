@@ -23,11 +23,11 @@ $(document).ready(function() {
 
     // ==================== SOCKET EVENTS ====================
     socket.on('connect', () => {
-        console.log('Conectado al servidor');
+        console.log('Connected to server');
         updateStatus('connected');
-        updateDiagnostic('server', 'ok', 'Conectado');
-        updateDiagnostic('socket', 'ok', 'Conectado');
-        toastr.success('Conectado al servidor', 'Conexión Exitosa');
+        updateDiagnostic('server', 'ok', 'Connected');
+        updateDiagnostic('socket', 'ok', 'Connected');
+        toastr.success('Connected to server', 'Connection Successful');
         startUptime();
     });
 
@@ -56,16 +56,16 @@ $(document).ready(function() {
     }
 
     socket.on('disconnect', () => {
-        console.log('Desconectado del servidor');
+        console.log('Disconnected from server');
         updateStatus('disconnected');
-        toastr.error('Desconectado del servidor', 'Conexión Perdida');
+        toastr.error('Disconnected from server', 'Connection Lost');
         stopUptime();
     });
 
     // WhatsApp connection events
     socket.on('wa-connecting', function(data) {
-        updateWhatsAppStatus('connecting', data?.message || 'Conectando...');
-        updateDiagnostic('whatsapp', 'warning', 'Conectando...');
+        updateWhatsAppStatus('connecting', data?.message || 'Connecting...');
+        updateDiagnostic('whatsapp', 'warning', 'Connecting...');
     });
 
     socket.on('wa-qr', function() {
@@ -78,15 +78,15 @@ $(document).ready(function() {
     });
 
     socket.on('wa-ready', function() {
-        updateWhatsAppStatus('connected', 'Conectado');
-        updateDiagnostic('whatsapp', 'ok', 'Conectado ✓');
+        updateWhatsAppStatus('connected', 'Connected');
+        updateDiagnostic('whatsapp', 'ok', 'Connected ✓');
         toastr.success('WhatsApp Web conectado', '✓ Online');
     });
 
     socket.on('wa-disconnected', function(reason) {
-        updateWhatsAppStatus('disconnected', 'Desconectado');
-        updateDiagnostic('whatsapp', 'error', 'Desconectado');
-        toastr.error('WhatsApp desconectado: ' + (reason || 'Sin razón'), 'Desconectado');
+        updateWhatsAppStatus('disconnected', 'Disconnected');
+        updateDiagnostic('whatsapp', 'error', 'Disconnected');
+        toastr.error('WhatsApp disconnected: ' + (reason || 'No reason'), 'Disconnected');
     });
 
     socket.on('auth_failure', function(msg) {
@@ -227,11 +227,11 @@ $(document).ready(function() {
         switch(status) {
             case 'connected':
                 statusDot.addClass('connected pulse').removeClass('disconnected');
-                statusText.html('Bot: <strong>Conectado</strong>');
+                statusText.html('Bot: <strong>Connected</strong>');
                 break;
             case 'disconnected':
                 statusDot.addClass('disconnected').removeClass('connected pulse');
-                statusText.html('Bot: <strong>Desconectado</strong>');
+                statusText.html('Bot: <strong>Disconnected</strong>');
                 break;
             case 'authenticated':
                 statusDot.addClass('connected pulse');
